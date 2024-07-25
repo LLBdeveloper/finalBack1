@@ -72,6 +72,26 @@ router.delete("/:cid/product/:pid", async (req, res) =>{
 })
 
 
+router.put("/:cid/product/:pid", async (req, res) => {
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
+    const { quantity } = req.body;
+
+    if (!quantity || quantity < 1) {
+        return res.status(400).json({ error: "Cantidad inválida" });
+    }
+
+    try {
+        const carritoActualizado = await cartManager.updateProductQuantity(cartId, productId, quantity);
+        res.json(carritoActualizado.products);
+    } catch (error) {
+        console.error("Error al actualizar la cantidad del producto en el carrito", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
+
+
+
 export default router;
 
 
