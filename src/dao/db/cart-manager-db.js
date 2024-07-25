@@ -29,13 +29,15 @@ class CartManager {
     async agregarProductoAlCarrito(cartId, productId, quantity = 1) {
         try {
             const carrito = await this.getCarritoById(cartId);
-            const existeProducto = carrito.products.find(item => item.product.toString() === productId);
-
+        
+            // Buscamos el elemento del carrito cuyo producto tenga el mismo ID que el producto que queremos agregar
+            const existeProducto = carrito.products.find(item => item.product._id.toString() === productId.toString());
+        
             if (existeProducto) {
                 existeProducto.quantity += quantity;
-                console.log('exito suma en el mismo producto')
+                console.log('exito suma en el mismo producto');
             } else {
-                console.log('primera vez en el carrito')
+                console.log('primera vez en el carrito');
                 carrito.products.push({ product: productId, quantity });
             }
 
