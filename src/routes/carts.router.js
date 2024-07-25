@@ -62,7 +62,7 @@ router.delete("/:cid", async (req,res) => {
     try {
         await cartManager.emptyCart(cartId)
     } catch (error) {
-        console.log(`Error al intentar vaciar carrito con ID: ${cartId}`)
+        console.log(`Error en router al intentar vaciar carrito con ID: ${cartId}`)
         res.status(500).json({error:"Error interno del servidor"})
     }
 })

@@ -120,7 +120,18 @@ class CartManager {
         }
     }
 
-    
+    async emptyCart(cartId) {
+        try {
+            await CartModel.findByIdAndUpdate(
+                { _id: cartId },
+                { $set: { products: [] } },
+            console.log('carrito')
+            )
+        } catch (error) {
+            console.log("Error en manager al vaciar el carrito", error);
+            throw error;
+        }
+    }
 
 }
 
