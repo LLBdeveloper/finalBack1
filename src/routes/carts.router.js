@@ -55,8 +55,20 @@ router.post("/:cid/product/:pid", async (req, res) => {
 });
 
 
+//Empty cart
+router.delete("/:cid", async (req,res) => {
+    const cartId =  req.params.cid
 
-// BORRAR PRODUCTOS ESPECIFICOS
+    try {
+        await cartManager.emptyCart(cartId)
+    } catch (error) {
+        console.log(`Error al intentar vaciar carrito con ID: ${cartId}`)
+        res.status(500).json({error:"Error interno del servidor"})
+    }
+})
+
+
+//Delete specific products
 router.delete("/:cid/product/:pid", async (req, res) =>{
     const cartId = req.params.cid
     const productId = req.params.pid
@@ -72,6 +84,8 @@ router.delete("/:cid/product/:pid", async (req, res) =>{
 })
 
 
+
+//Update cart quantity
 router.put("/:cid/product/:pid", async (req, res) => {
     const cartId = req.params.cid;
     const productId = req.params.pid;
@@ -93,6 +107,3 @@ router.put("/:cid/product/:pid", async (req, res) => {
 
 
 export default router;
-
-
-

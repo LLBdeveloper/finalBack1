@@ -76,28 +76,51 @@ class CartManager {
     }
 
 
+    // async updateProductQuantity(cartId, productId, quantity) {
+    //     try {
+    //         const carrito = await this.getCarritoById(cartId);
+        
+    //         const existeProducto = carrito.products.find(item => item.product._id.toString() === productId.toString());
+        
+    //         if (existeProducto) {
+    //             existeProducto.quantity = quantity;
+    //             console.log('Cantidad de producto actualizada');
+    //         } else {
+    //             console.log('Producto no encontrado en el carrito');
+    //             throw new Error('Producto no encontrado en el carrito');
+    //         }
+
+    //         carrito.markModified("products");
+    //         await carrito.save();
+    //         return carrito;
+    //     } catch (error) {
+    //         console.log("Error al actualizar la cantidad del producto", error);
+    //         throw error;
+    //     }
+    // }
+
     async updateProductQuantity(cartId, productId, quantity) {
         try {
-            const carrito = await this.getCarritoById(cartId);
-        
-            const existeProducto = carrito.products.find(item => item.product._id.toString() === productId.toString());
-        
-            if (existeProducto) {
-                existeProducto.quantity = quantity;
-                console.log('Cantidad de producto actualizada');
-            } else {
+            const carrito = await CartModel.findOneAndUpdate(
+                { _id: cartId, "products.product": productId },
+                { $set: { "products.$.quantity": quantity } },
+                { new: true }
+            ).populate('products.product');
+
+            if (!carrito) {
                 console.log('Producto no encontrado en el carrito');
                 throw new Error('Producto no encontrado en el carrito');
             }
 
-            carrito.markModified("products");
-            await carrito.save();
+            console.log('Cantidad de producto actualizada');
             return carrito;
         } catch (error) {
             console.log("Error al actualizar la cantidad del producto", error);
             throw error;
         }
     }
+
+    
 
 }
 
