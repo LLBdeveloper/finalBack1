@@ -56,21 +56,20 @@ router.post("/:cid/product/:pid", async (req, res) => {
 
 
 
-//BORRAR PRODUCTOS ESPECIFICOS
-// router.delete("/api/carts/:cid/products/:pid", async () =>{
-//     const cartId = req.params.cid
-//     const productId = req.params.pid
-//     const quantity = req.body.quantity || 1
+// BORRAR PRODUCTOS ESPECIFICOS
+router.delete("/:cid/product/:pid", async (req, res) =>{
+    const cartId = req.params.cid
+    const productId = req.params.pid
 
-//     try {
-        
-//     } catch (error) {
-//         console.error("Error al agregar producto al carrito", error);
-//         res.status(500).json({ error: "Error interno del servidor" });
-//     }
-
-
-// })
+    try {
+        await cartManager.deleteItem(productId, cartId)
+        console.log('Producto eliminado con exito del carrito')
+    } catch (error) {
+        console.error("Error al borrar producto del carrito", error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+    
+})
 
 
 export default router;

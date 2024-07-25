@@ -51,6 +51,29 @@ class CartManager {
             console.log("error al agregar un producto", error);
         }
     }
+/////////////////////
+    async deleteItem(idItem, idCarrito) {
+        try {
+            const carrito = await CartModel.findById(idCarrito);
+    
+            if (!carrito) {
+                throw new Error('Carrito no encontrado');
+            }
+    
+            // Encuentra el índice del elemento a eliminar
+            const index = carrito.products.findIndex(item => item._id.toString() === idItem.toString());
+    
+            if (index !== -1) {
+                carrito.products.splice(index, 1);
+                await carrito.save();
+                console.log('Elemento eliminado del carrito');
+            } else {
+                console.log('Elemento no encontrado en el carrito');
+            }
+        } catch (error) {
+            console.error('Error al eliminar el elemento:', error);
+        }
+    }
 }
  
 export default CartManager;
