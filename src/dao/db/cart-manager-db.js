@@ -7,13 +7,14 @@ class CartManager {
             await nuevoCarrito.save();
             return nuevoCarrito;
         } catch (error) {
-            console.log("Error al crear el nuevo carrinho de compriñas");
+            console.log("Error al crear el nuevo carrito");
         }
     }
 
     async getCarritoById(cartId) {
         try {
             const carrito = await CartModel.findById(cartId);
+            console.log('se encontro carrito por ID')
             if (!carrito) {
                 console.log("No existe ese carrito con el id");
                 return null;
@@ -32,7 +33,9 @@ class CartManager {
 
             if (existeProducto) {
                 existeProducto.quantity += quantity;
+                console.log('exito suma en el mismo producto')
             } else {
+                console.log('primera vez en el carrito')
                 carrito.products.push({ product: productId, quantity });
             }
 
