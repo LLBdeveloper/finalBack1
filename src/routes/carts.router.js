@@ -4,7 +4,7 @@ import CartManager from "../dao/db/cart-manager-db.js";
 const cartManager = new CartManager();
 import CartModel from "../dao/models/cart.model.js";
 
-// 1) Create a new cart
+// Create a new cart
 router.post("/", async (req, res) => {
     try {
         const newCart = await cartManager.crearCarrito();
@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-// 2) List products belonging to a specific cart
+// List products belonging to a specific cart
 router.get("/:cid", async (req, res) => {
     const cartId = req.params.cid;
 
@@ -34,7 +34,7 @@ router.get("/:cid", async (req, res) => {
     }
 });
 
-// 3) Add products to different carts
+// Add products to different carts
 router.post("/:cid/product/:pid", async (req, res) => {
     const cartId = req.params.cid;
     const productId = req.params.pid;

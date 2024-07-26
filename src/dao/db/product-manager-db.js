@@ -6,14 +6,14 @@ class ProductManager {
         try {
 
             if (!title || !description || !price || !code || !stock || !category) {
-                console.log("Todos los campos son obligatorios");
+                console.log("All fields are mandatory");
                 return;
             }
 
-            const existeProducto = await ProductModel.findOne({ code: code });
+            const existingProduct = await ProductModel.findOne({ code: code });
 
-            if (existeProducto) {
-                console.log("El código debe ser único, malditooo!!!");
+            if (existingProduct) {
+                console.log("The code must be unique!");
                 return;
             }
 
@@ -32,7 +32,7 @@ class ProductManager {
             await newProduct.save();
 
         } catch (error) {
-            console.log("Error al agregar producto", error);
+            console.log("Error adding product", error);
             throw error;
         }
     }
@@ -54,7 +54,7 @@ class ProductManager {
                 }
             }
 
-            const productos = await ProductModel
+            const products = await ProductModel
                 .find(queryOptions)
                 .sort(sortOptions)
                 .skip(skip)
@@ -67,7 +67,7 @@ class ProductManager {
             const hasNextPage = page < totalPages;
 
             return {
-                docs: productos,
+                docs: products,
                 totalPages,
                 prevPage: hasPrevPage ? page - 1 : null,
                 nextPage: hasNextPage ? page + 1 : null,
@@ -78,58 +78,59 @@ class ProductManager {
                 nextLink: hasNextPage ? `/api/products?limit=${limit}&page=${page + 1}&sort=${sort}&query=${query}` : null,
             };
         } catch (error) {
-            console.log("Error al obtener los productos", error);
+            console.log("Error getting products", error);
             throw error;
         }
     }
 
     async getProductById(id) {
         try {
-            const producto = await ProductModel.findById(id);
+            const product = await ProductModel.findById(id);
 
-            if (!producto) {
-                console.log("Producto no encontrado");
+            if (!product) {
+                console.log("Product not found");
                 return null;
             }
 
-            console.log("Producto encontrado!! Claro que siiiiii");
-            return producto;
+            console.log("Product found!");
+            return product;
         } catch (error) {
-            console.log("Error al traer un producto por id");
+            console.log("Error getting product by id", error);
+            throw error;
         }
     }
 
-    async updateProduct(id, productoActualizado) {
+    async updateProduct(id, updatedProduct) {
         try {
 
-            const updateado = await ProductModel.findByIdAndUpdate(id, productoActualizado);
+            const updated = await ProductModel.findByIdAndUpdate(id, updatedProduct);
 
-            if (!updateado) {
-                console.log("No se encuentra che el producto");
+            if (!updated) {
+                console.log("Product not found");
                 return null;
             }
 
-            console.log("Producto actualizado con exito, como todo en mi vidaa!");
-            return updateado;
+            console.log("Product successfully updated!");
+            return updated;
         } catch (error) {
-            console.log("Error al actualizar el producto", error);
-
+            console.log("Error updating product", error);
+            throw error;
         }
     }
 
     async deleteProduct(id) {
         try {
 
-            const deleteado = await ProductModel.findByIdAndDelete(id);
+            const deleted = await ProductModel.findByIdAndDelete(id);
 
-            if (!deleteado) {
-                console.log("No se encuentraaaa, busca bien!");
+            if (!deleted) {
+                console.log("Product not found, search again!");
                 return null;
             }
 
-            console.log("Producto eliminado correctamente!");
+            console.log("Product successfully deleted!");
         } catch (error) {
-            console.log("Error al eliminar el producto", error);
+            console.log("Error deleting product", error);
             throw error;
         }
     }
