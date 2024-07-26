@@ -1,14 +1,14 @@
 import express from "express";
 import routemap from "express-routemap"
 import exphbs from "express-handlebars";
-import "./database.js";
-
 import productsRouter from "./routes/products.router.js";
 import cartsRouter from "./routes/carts.router.js";
 import viewsRouter from "./routes/views.router.js";
-
-const app = express();
+import "./database.js";
 const PUERTO = 8080;
+const app = express();
+
+
 //Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());

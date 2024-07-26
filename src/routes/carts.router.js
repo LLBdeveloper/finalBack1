@@ -107,7 +107,7 @@ router.put("/:cid/product/:pid", async (req, res) => {
 //Update cart
 router.put('/:cid', async (req, res) => {
     const cartId = req.params.cid;
-    const newProducts = req.body.products; // Suponemos que el cuerpo de la solicitud contiene un arreglo de productos
+    const newProducts = req.body.products; 
 
     try {
         const cart = await CartModel.findById(cartId);
@@ -116,7 +116,6 @@ router.put('/:cid', async (req, res) => {
             return res.status(404).json({ error: 'Carrito no encontrado' });
         }
 
-        // Reemplazar los productos existentes con los nuevos
         cart.products = newProducts;
 
         await cart.save();
@@ -127,4 +126,6 @@ router.put('/:cid', async (req, res) => {
         res.status(500).json({ error: 'Error al actualizar el carrito' });
     }
 });
+
+
 export default router;
