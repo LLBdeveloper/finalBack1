@@ -23,7 +23,7 @@ router.get("/:cid", async (req, res) => {
     const cartId = req.params.cid;
 
     try {
-        const carrito = await CartModel.findById(cartId)
+        const carrito = await CartModel.findById(cartId).populate('products.product')
             
         if (!carrito) {
             console.log("No existe ese carrito con el id");
@@ -60,7 +60,7 @@ router.delete("/:cid", async (req,res) => {
     const cartId =  req.params.cid
 
     try {
-        await cartManager.emptyCart(cartId)
+        const cart = await cartManager.emptyCart(cartId)
     } catch (error) {
         console.log(`Error en router al intentar vaciar carrito con ID: ${cartId}`)
         res.status(500).json({error:"Error interno del servidor"})
@@ -104,6 +104,27 @@ router.put("/:cid/product/:pid", async (req, res) => {
     }
 });
 
+//Update cart
+router.put('/:cid', async (req, res) => {
+    const cartId = req.params.cid;
+    const newProducts = req.body.products; // Suponemos que el cuerpo de la solicitud contiene un arreglo de productos
 
+    try {
+        const cart = await CartModel.findById(cartId);
 
+        if (!cart) {
+            return res.status(404).json({ error: 'Carrito no encontrado' });
+        }
+
+        // Reemplazar los productos existentes con los nuevos
+        cart.products = newProducts;
+
+        await cart.save();
+
+        res.json(cart);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al actualizar el carrito' });
+    }
+});
 export default router;

@@ -19,7 +19,7 @@ class CartManager {
                 console.log("No existe ese carrito con el id");
                 return null;
             }
-
+            console.log('Carrito encontrado por ID');
             return carrito;
         } catch (error) {
             console.log("Error al traer el carrito, fijate bien lo que haces", error);
@@ -51,6 +51,7 @@ class CartManager {
             console.log("error al agregar un producto", error);
         }
     }
+    
 /////////////////////
     async deleteItem(idItem, idCarrito) {
         try {
@@ -74,30 +75,6 @@ class CartManager {
             console.error('Error al eliminar el elemento:', error);
         }
     }
-
-
-    // async updateProductQuantity(cartId, productId, quantity) {
-    //     try {
-    //         const carrito = await this.getCarritoById(cartId);
-        
-    //         const existeProducto = carrito.products.find(item => item.product._id.toString() === productId.toString());
-        
-    //         if (existeProducto) {
-    //             existeProducto.quantity = quantity;
-    //             console.log('Cantidad de producto actualizada');
-    //         } else {
-    //             console.log('Producto no encontrado en el carrito');
-    //             throw new Error('Producto no encontrado en el carrito');
-    //         }
-
-    //         carrito.markModified("products");
-    //         await carrito.save();
-    //         return carrito;
-    //     } catch (error) {
-    //         console.log("Error al actualizar la cantidad del producto", error);
-    //         throw error;
-    //     }
-    // }
 
     async updateProductQuantity(cartId, productId, quantity) {
         try {
@@ -123,9 +100,10 @@ class CartManager {
     async emptyCart(cartId) {
         try {
             await CartModel.findByIdAndUpdate(
-                { _id: cartId },
+                cartId,
                 { $set: { products: [] } },
-            console.log('carrito')
+                { new: true },
+            console.log('Empty cart OK')
             )
         } catch (error) {
             console.log("Error en manager al vaciar el carrito", error);
