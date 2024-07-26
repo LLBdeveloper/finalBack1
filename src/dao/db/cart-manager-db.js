@@ -1,98 +1,97 @@
 import CartModel from "../models/cart.model.js";
 
 class CartManager {
-    async crearCarrito() {
+    async createCart() {
         try {
-            const nuevoCarrito = new CartModel({ products: [] });
-            await nuevoCarrito.save();
-            return nuevoCarrito;
+            const newCart = new CartModel({ products: [] });
+            await newCart.save();
+            return newCart;
         } catch (error) {
-            console.log("Error al crear el nuevo carrito");
+            console.log("Error creating new cart");
+            throw error;
         }
     }
 
-    async getCarritoById(cartId) {
+    async getCartById(cartId) {
         try {
-            const carrito = await CartModel.findById(cartId);
-            console.log('se encontro carrito por ID')
-            if (!carrito) {
-                console.log("No existe ese carrito con el id");
+            const cart = await CartModel.findById(cartId);
+            console.log('Cart found by ID');
+            if (!cart) {
+                console.log("Cart with the specified ID does not exist");
                 return null;
             }
-            console.log('Carrito encontrado por ID');
-            return carrito;
+            return cart;
         } catch (error) {
-            console.log("Error al traer el carrito, fijate bien lo que haces", error);
+            console.log("Error retrieving the cart", error);
+            throw error;
         }
     }
 
-    async agregarProductoAlCarrito(cartId, productId, quantity = 1) {
+    async addProductToCart(cartId, productId, quantity = 1) {
         try {
-            const carrito = await this.getCarritoById(cartId);
+            const cart = await this.getCartById(cartId);
         
-            // Buscamos el elemento del carrito cuyo producto tenga el mismo ID que el producto que queremos agregar
-            const existeProducto = carrito.products.find(item => item.product._id.toString() === productId.toString());
+            const existingProduct = cart.products.find(item => item.product._id.toString() === productId.toString());
         
-            if (existeProducto) {
-                existeProducto.quantity += quantity;
-                console.log('exito suma en el mismo producto');
+            if (existingProduct) {
+                existingProduct.quantity += quantity;
+                console.log('Successfully added to existing product');
             } else {
-                console.log('primera vez en el carrito');
-                carrito.products.push({ product: productId, quantity });
+                console.log('First time in the cart');
+                cart.products.push({ product: productId, quantity });
             }
 
-            //Vamos a marcar la propiedad "products" como modificada antes de guardar: 
-            carrito.markModified("products");
+            cart.markModified("products");
 
-            await carrito.save();
-            return carrito;
+            await cart.save();
+            return cart;
 
         } catch (error) {
-            console.log("error al agregar un producto", error);
+            console.log("Error adding a product", error);
+            throw error;
         }
     }
     
-/////////////////////
-    async deleteItem(idItem, idCarrito) {
+    async deleteItem(itemId, cartId) {
         try {
-            const carrito = await CartModel.findById(idCarrito);
+            const cart = await CartModel.findById(cartId);
     
-            if (!carrito) {
-                throw new Error('Carrito no encontrado');
+            if (!cart) {
+                throw new Error('Cart not found');
             }
     
-            // Encuentra el índice del elemento a eliminar
-            const index = carrito.products.findIndex(item => item._id.toString() === idItem.toString());
+            const index = cart.products.findIndex(item => item._id.toString() === itemId.toString());
     
             if (index !== -1) {
-                carrito.products.splice(index, 1);
-                await carrito.save();
-                console.log('Elemento eliminado del carrito');
+                cart.products.splice(index, 1);
+                await cart.save();
+                console.log('Item removed from cart');
             } else {
-                console.log('Elemento no encontrado en el carrito');
+                console.log('Item not found in cart');
             }
         } catch (error) {
-            console.error('Error al eliminar el elemento:', error);
+            console.error('Error removing the item:', error);
+            throw error;
         }
     }
 
     async updateProductQuantity(cartId, productId, quantity) {
         try {
-            const carrito = await CartModel.findOneAndUpdate(
+            const cart = await CartModel.findOneAndUpdate(
                 { _id: cartId, "products.product": productId },
                 { $set: { "products.$.quantity": quantity } },
                 { new: true }
             ).populate('products.product');
 
-            if (!carrito) {
-                console.log('Producto no encontrado en el carrito');
-                throw new Error('Producto no encontrado en el carrito');
+            if (!cart) {
+                console.log('Product not found in cart');
+                throw new Error('Product not found in cart');
             }
 
-            console.log('Cantidad de producto actualizada');
-            return carrito;
+            console.log('Product quantity updated');
+            return cart;
         } catch (error) {
-            console.log("Error al actualizar la cantidad del producto", error);
+            console.log("Error updating product quantity", error);
             throw error;
         }
     }
@@ -102,11 +101,11 @@ class CartManager {
             await CartModel.findByIdAndUpdate(
                 cartId,
                 { $set: { products: [] } },
-                { new: true },
-            console.log('Empty cart OK')
-            )
+                { new: true }
+            );
+            console.log('Cart emptied successfully');
         } catch (error) {
-            console.log("Error en manager al vaciar el carrito", error);
+            console.log("Error emptying the cart", error);
             throw error;
         }
     }
