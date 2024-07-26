@@ -1,8 +1,9 @@
 import express from "express";
-const router = express.Router();
 import CartManager from "../dao/db/cart-manager-db.js";
-const cartManager = new CartManager();
 import CartModel from "../dao/models/cart.model.js";
+
+const router = express.Router();
+const cartManager = new CartManager();
 
 // Create a new cart
 router.post("/", async (req, res) => {

@@ -13,7 +13,7 @@ class ProductManager {
             const existingProduct = await ProductModel.findOne({ code: code });
 
             if (existingProduct) {
-                console.log("The code must be unique!");
+                console.log("Be unique");
                 return;
             }
 
@@ -110,7 +110,7 @@ class ProductManager {
                 return null;
             }
 
-            console.log("Product successfully updated!");
+            console.log("Product successfully updated");
             return updated;
         } catch (error) {
             console.log("Error updating product", error);
@@ -124,7 +124,7 @@ class ProductManager {
             const deleted = await ProductModel.findByIdAndDelete(id);
 
             if (!deleted) {
-                console.log("Product not found, search again!");
+                console.log("Product not found");
                 return null;
             }
 
